@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
+}
+
+body{
+    height:100vh;
+    background:linear-gradient(135deg,#7a0c1e,#b11226);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    transition:background 1s ease;
+}
+
+/* FLOATING */
+.float{
+    position:absolute;
+    bottom:-80px;
+    font-size:32px;
+    animation:floatUp linear infinite;
+    opacity:0.9;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(0);}
+    100%{transform:translateY(-120vh);}
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.28);
+    backdrop-filter:blur(16px);
+    border-radius:32px;
+    padding:70px 55px;
+    width:95%;
+    max-width:600px;
+    text-align:center;
+    box-shadow:0 40px 80px rgba(0,0,0,0.35);
+    color:#fff;
+}
+
+h1{
+    font-size:36px;
+    margin-bottom:20px;
+}
+
+p{
+    font-size:20px;
+    min-height:110px;
+    line-height:1.8;
+}
+
+/* BUTTONS */
+button{
+    margin-top:28px;
+    padding:15px 44px;
+    border:none;
+    border-radius:40px;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(0,0,0,0.3);
+    transition:0.2s;
+}
+
+button:active{
+    transform:translateY(3px);
+}
+
+/* CONTINUE */
+#nextBtn{
+    background:#8b102e;
+    color:white;
+    font-weight:700;
+}
+
+/* CHOICE */
+.choice{
+    display:none;
+    gap:20px;
+    justify-content:center;
+    margin-top:30px;
+}
+
+/* YES */
+.yesBtn{
+    background:linear-gradient(135deg,#b11226,#ff2f68);
+    color:white;
+}
+
+/* NO */
+#noBtn{
+    background:#ffe3ec;
+    color:#7a0c1e;
+    border:2px solid #b11226;
+    position:relative;
+}
+
+/* FIREWORK */
+.firework{
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:white;
+    animation:burst 1.2s ease-out forwards;
+}
+
+@keyframes burst{
+    to{
+        transform:translate(var(--x),var(--y));
+        opacity:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <h1>Hey Moon ❤️</h1>
+    <p id="text"></p>
+
+    <button id="nextBtn" onclick="nextLine()">Continue</button>
+
+    <div class="choice" id="choiceBox">
+        <button class="yesBtn" onclick="firstYes()">Yes ❤️</button>
+        <button id="noBtn"
+            onmouseover="moveNo()"
+            ontouchstart="moveNo()">Not now 🙈</button>
+    </div>
+</div>
+
+<script>
+/* STORY LINES */
+const lines=[
+    "I did not plan this at all.",
+    "Somehow you became someone special to me.",
+    "Your smile changes my mood instantly.",
+    "Your presence feels calm and comforting.",
+    "My feelings for you are real and honest.",
+    "So today I want to ask you something."
+];
+
+/* BACKGROUND COLORS */
+const bgColors=[
+    ["#7a0c1e","#b11226"],
+    ["#8b102e","#c9184a"],
+    ["#5c0b1b","#a4133c"],
+    ["#4a040f","#7a0c1e"]
+];
+
+/* NO TEXTS */
+const noWords=[
+    "No, Not now 🙈",
+    "Maybe 🤔",
+    "Still no 😅",
+    "Hmm, No 🤭",
+    "umm, No 😜",
+    "Stop it 😂",
+    "Enough 😳"
+];
+
+const noPositions=[
+    {left:"80%",top:"10%"},
+    {left:"10%",top:"80%"},
+    {left:"75%",top:"75%"},
+    {left:"5%",top:"5%"},
+    {left:"50%",top:"5%"},
+    {left:"5%",top:"50%"},
+    {left:"80%",top:"50%"}
+];
+
+let index=0;
+let bgIndex=0;
+let noCount=0;
+let typing=false;
+
+/* TYPE TEXT SAFE */
+function typeText(text){
+    typing=true;
+    const el=document.getElementById("text");
+    el.innerHTML="";
+    let i=0;
+
+    function run(){
+        if(i<text.length){
+            el.innerHTML+=text.charAt(i);
+            i++;
+            setTimeout(run,40);
+        }else{
+            typing=false;
+        }
+    }
+    run();
+}
+
+/* CONTINUE */
+function nextLine(){
+    if(typing) return;   // 🔒 FIX
+
+    bgIndex=(bgIndex+1)%bgColors.length;
+    document.body.style.background=
+      `linear-gradient(135deg,${bgColors[bgIndex][0]},${bgColors[bgIndex][1]})`;
+
+    if(index<lines.length){
+        typeText(lines[index]);
+        index++;
+    }else{
+        nextBtn.style.display="none";
+        choiceBox.style.display="flex";
+        text.innerHTML="Will you be my Valentine ❤️";
+    }
+}
+
+/* NO BUTTON */
+function moveNo(){
+    if(noCount===0){
+        noCount++;
+        return; // stays in line first time ✔
+    }
+
+    if(noCount>=7){
+        noBtn.style.display="none";
+        return;
+    }
+
+    noBtn.innerText=noWords[noCount];
+    const pos=noPositions[noCount-1];
+    noBtn.style.position="fixed";
+    noBtn.style.left=pos.left;
+    noBtn.style.top=pos.top;
+    noCount++;
+}
+
+/* FIRST YES */
+function firstYes(){
+    let msg = "";
+
+    if(noCount === 0){
+        msg = `
+        Ohh, Itna Pyaaar <br>
+        you know I love you and I’m confident in that.<br><br>
+        My heart chose you and I trust that choice.<br><br>
+        I love you shivi ❤️
+        `;
+    }
+    else if(noCount <= 2){
+        msg = `
+        ummmhu, You made me wait a little, but you love me even more <br>
+        I’m not in a hurry. I simply know how you feel.<br><br>
+        My heart stayed calm and it stayed with you.<br><br>
+        Mujhe na Tese boht Pyar hai❤️
+        `;
+    }
+    else if(noCount === 3){
+        msg = `
+        Haay kitna wait karai <br>
+        You took your time and I respected that.<br><br>
+        My heart chose you and I trusted it quietly.<br><br>
+        looooooving you ❤️
+        `;
+    }
+    else if(noCount === 4){
+        msg = `
+        Meko pta tha, well <br>
+        Dear, I stand beside you always, believing in your strength
+        and everything you’re capable of.<br><br>
+        My feelings stayed steady, not rushed.<br><br>
+        Love you ❤️
+        `;
+    }
+    else if(noCount === 5){
+        msg = `
+        Sach me, tu Naa <br>
+        but you know, You matter to me more than I can explain.<br><br>
+        Even after waiting, my feelings remained honest.<br><br>
+         Loooooooov you❤️
+        `;
+    }
+    else{
+        msg = `
+        I stood by my feelings for you,
+        with honesty and respect.<br><br>
+        After every little no, my heart still chose you.<br><br>
+        I love you forever baby ❤️
+        `;
+    }
+
+    card.innerHTML = `
+        <h1>Thanks to Choose Me❤️</h1>
+        <p>${msg}<br><br>
+        Will you be my forever? 🥹❤️</p>
+        <div class="choice" style="display:flex">
+            <button class="yesBtn" onclick="finalYes()">Yes ❤️</button>
+            <button class="yesBtn" onclick="finalYes()">Haan 🫶</button>
+        </div>
+    `;
+}
+
+/* FINAL YES */
+function finalYes(){
+    card.innerHTML=`
+        <h1>Forever ❤️</h1>
+        <p>
+        In this life and every life after,<br>
+        Shivani, I love you with certainty and calm ❤️<br><br>
+        And that is my forever.<br>
+        </p>
+    `;
+    fireworks();
+}
+
+/* FIREWORKS */
+function fireworks(){
+    setInterval(()=>{
+        for(let i=0;i<80;i++){
+            const f=document.createElement("div");
+            f.className="firework";
+            f.style.left=Math.random()*100+"vw";
+            f.style.top=Math.random()*100+"vh";
+            f.style.setProperty("--x",Math.random()*300-150+"px");
+            f.style.setProperty("--y",Math.random()*300-150+"px");
+            document.body.appendChild(f);
+            setTimeout(()=>f.remove(),1200);
+        }
+    },900);
+}
+
+/* FLOATING */
+setInterval(()=>{
+    const el=document.createElement("div");
+    el.className="float";
+    el.innerHTML=["❤️","🌹","🧸","🐼"][Math.floor(Math.random()*4)];
+    el.style.left=Math.random()*100+"vw";
+    el.style.animationDuration=(7+Math.random()*5)+"s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),12000);
+},300);
+
+/* START */
+typeText(lines[0]);
+index=1;
+</script>
+
+</body>
+</html>
