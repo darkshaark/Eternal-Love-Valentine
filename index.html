@@ -22,7 +22,7 @@ body{
     transition:background 1s ease;
 }
 
-/* FLOATING */
+/* FLOATING EMOJIS */
 .float{
     position:absolute;
     bottom:-80px;
@@ -49,9 +49,26 @@ body{
     color:#fff;
 }
 
+/* 🌙 FLOATING HEY MOON */
 h1{
     font-size:36px;
     margin-bottom:20px;
+    animation:moonFloat 4s ease-in-out infinite;
+}
+
+@keyframes moonFloat{
+    0%{
+        transform:translateY(0) scale(1);
+        opacity:1;
+    }
+    50%{
+        transform:translateY(-14px) scale(1.03);
+        opacity:0.85;
+    }
+    100%{
+        transform:translateY(0) scale(1);
+        opacity:1;
+    }
 }
 
 p{
@@ -134,14 +151,11 @@ button:active{
 
     <div class="choice" id="choiceBox">
         <button class="yesBtn" onclick="firstYes()">Yes ❤️</button>
-        <button id="noBtn"
-            onmouseover="moveNo()"
-            ontouchstart="moveNo()">Not now 🙈</button>
+        <button id="noBtn" onmouseover="moveNo()" ontouchstart="moveNo()">Not now 🙈</button>
     </div>
 </div>
 
 <script>
-/* STORY LINES */
 const lines=[
     "I did not plan this at all.",
     "Somehow you became someone special to me.",
@@ -151,7 +165,6 @@ const lines=[
     "So today I want to ask you something."
 ];
 
-/* BACKGROUND COLORS */
 const bgColors=[
     ["#7a0c1e","#b11226"],
     ["#8b102e","#c9184a"],
@@ -159,7 +172,6 @@ const bgColors=[
     ["#4a040f","#7a0c1e"]
 ];
 
-/* NO TEXTS */
 const noWords=[
     "No, Not now 🙈",
     "Maybe 🤔",
@@ -185,7 +197,6 @@ let bgIndex=0;
 let noCount=0;
 let typing=false;
 
-/* TYPE TEXT SAFE */
 function typeText(text){
     typing=true;
     const el=document.getElementById("text");
@@ -204,9 +215,8 @@ function typeText(text){
     run();
 }
 
-/* CONTINUE */
 function nextLine(){
-    if(typing) return;   // 🔒 FIX
+    if(typing) return;
 
     bgIndex=(bgIndex+1)%bgColors.length;
     document.body.style.background=
@@ -222,18 +232,15 @@ function nextLine(){
     }
 }
 
-/* NO BUTTON */
 function moveNo(){
     if(noCount===0){
         noCount++;
-        return; // stays in line first time ✔
+        return;
     }
-
     if(noCount>=7){
         noBtn.style.display="none";
         return;
     }
-
     noBtn.innerText=noWords[noCount];
     const pos=noPositions[noCount-1];
     noBtn.style.position="fixed";
@@ -242,64 +249,13 @@ function moveNo(){
     noCount++;
 }
 
-/* FIRST YES */
 function firstYes(){
-    let msg = "";
-
-    if(noCount === 0){
-        msg = `
-        Ohh, Itna Pyaaar <br>
-        you know I love you and I’m confident in that.<br><br>
-        My heart chose you and I trust that choice.<br><br>
-        I love you shivi ❤️
-        `;
-    }
-    else if(noCount <= 2){
-        msg = `
-        ummmhu, You made me wait a little, but you love me even more <br>
-        I’m not in a hurry. I simply know how you feel.<br><br>
-        My heart stayed calm and it stayed with you.<br><br>
-        Mujhe na Tese boht Pyar hai❤️
-        `;
-    }
-    else if(noCount === 3){
-        msg = `
-        Haay kitna wait karai <br>
-        You took your time and I respected that.<br><br>
-        My heart chose you and I trusted it quietly.<br><br>
-        looooooving you ❤️
-        `;
-    }
-    else if(noCount === 4){
-        msg = `
-        Meko pta tha, well <br>
-        Dear, I stand beside you always, believing in your strength
-        and everything you’re capable of.<br><br>
-        My feelings stayed steady, not rushed.<br><br>
-        Love you ❤️
-        `;
-    }
-    else if(noCount === 5){
-        msg = `
-        Sach me, tu Naa <br>
-        but you know, You matter to me more than I can explain.<br><br>
-        Even after waiting, my feelings remained honest.<br><br>
-         Loooooooov you❤️
-        `;
-    }
-    else{
-        msg = `
-        I stood by my feelings for you,
-        with honesty and respect.<br><br>
-        After every little no, my heart still chose you.<br><br>
-        I love you forever baby ❤️
-        `;
-    }
-
-    card.innerHTML = `
-        <h1>Thanks to Choose Me❤️</h1>
-        <p>${msg}<br><br>
-        Will you be my forever? 🥹❤️</p>
+    card.innerHTML=`
+        <h1>Thanks for Choosing Me ❤️</h1>
+        <p>
+        My heart stayed calm and chose you quietly.<br><br>
+        Will you be my forever? 🥹❤️
+        </p>
         <div class="choice" style="display:flex">
             <button class="yesBtn" onclick="finalYes()">Yes ❤️</button>
             <button class="yesBtn" onclick="finalYes()">Haan 🫶</button>
@@ -307,20 +263,17 @@ function firstYes(){
     `;
 }
 
-/* FINAL YES */
 function finalYes(){
     card.innerHTML=`
         <h1>Forever ❤️</h1>
         <p>
         In this life and every life after,<br>
-        Baby, I love you with certainty and calm ❤️<br><br>
-        And that is my forever.<br>
+        I choose you with certainty and calm ❤️
         </p>
     `;
     fireworks();
 }
 
-/* FIREWORKS */
 function fireworks(){
     setInterval(()=>{
         for(let i=0;i<80;i++){
@@ -336,7 +289,6 @@ function fireworks(){
     },900);
 }
 
-/* FLOATING */
 setInterval(()=>{
     const el=document.createElement("div");
     el.className="float";
@@ -347,11 +299,9 @@ setInterval(()=>{
     setTimeout(()=>el.remove(),12000);
 },300);
 
-/* START */
 typeText(lines[0]);
 index=1;
 </script>
 
 </body>
 </html>
-
